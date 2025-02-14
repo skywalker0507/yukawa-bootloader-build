@@ -14,20 +14,17 @@ jobs:
       run: |
         sudo apt update
         sudo apt install gcc-aarch64-linux-gnu bc bison build-essential curl u-boot-tools flex git libssl-dev python3 python3-pip wget -y
-
-    - name: download code
-      run: |
-        git clone https://gitlab.baylibre.com/baylibre/amlogic/atv/u-boot.git -b u-boot/v2024.01-rc1/integ bootloaders
         
     - name: build
       run: |
+        git clone https://gitlab.baylibre.com/baylibre/amlogic/atv/u-boot.git -b u-boot/v2024.01-rc1/integ bootloaders
         cd bootloaders/
         wget https://gitlab.baylibre.com/baylibre/amlogic/atv/aosp/device/amlogic/yukawa/-/raw/master/bootloader/fip_packages/fip-collect-g12b-kvim3-khadas-vims-pie-20210111-211833.tar.gz
         wget https://gitlab.baylibre.com/baylibre/amlogic/atv/aosp/device/amlogic/yukawa/-/raw/master/bootloader/scripts/generate-bins-new.sh
         tar xvf fip-collect-g12b-kvim3-khadas-vims-pie-20210111-211833.tar.gz
         export CROSS_COMPILE=aarch64-linux-gnu-
         make khadas-vim3_android_ab_defconfig
-        make -j"$(nproc)"
+        make -j4
         chmod +x generate-bins-new.sh
         ./generate-bins-new.sh fip-collect-g12b-kvim3-khadas-vims-pie-20210111-211833 u-boot.bin
 
